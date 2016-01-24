@@ -114,14 +114,6 @@ void JoyExt::clbkPreStep (double simt, double simdt, double mjd)
 	UpdateJoystick();
 	VESSEL *vessel = oapiGetFocusInterface();
 
-	// React if we changed from ROT and Rudder was not centered
-	int attMode = vessel->GetAttitudeMode();
-	if (attMode != RCS_ROT)
-	{
-		vessel->SetThrusterGroupLevel(THGROUP_ATT_YAWLEFT, 0);
-		vessel->SetThrusterGroupLevel(THGROUP_ATT_YAWRIGHT, 0);
-	}
-
 	for (int i = 0; i < NELEM(values); ++i)
 	{
 		float val;
