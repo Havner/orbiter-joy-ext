@@ -25,7 +25,8 @@ void setRudder(VESSEL *vessel, float value)
 	double newVal = value * 2.0 - 1.0;
 	int attMode = vessel->GetAttitudeMode();
 
-	vessel->SetControlSurfaceLevel (AIRCTRL_RUDDER, newVal);
+	if (vessel->GetADCtrlMode() & 0x02)
+		vessel->SetControlSurfaceLevel (AIRCTRL_RUDDER, newVal);
 
 	switch (attMode)
 	{
