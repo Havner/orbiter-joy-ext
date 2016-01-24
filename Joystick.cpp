@@ -1,6 +1,5 @@
 #include "stdafx.h"
 
-#include "Config.h"
 #include "Joystick.h"
 
 #include <stdio.h>
