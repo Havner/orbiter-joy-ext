@@ -14,22 +14,8 @@
 
 #define NELEM(X)     (sizeof(X)/sizeof(*(X)))
 
-enum Function
-{
-	FUNCT_RUDDER = 0,
-	FUNCT_HOVER
-};
 
-struct Value
-{
-	Function funct;
-	int joy;
-	GUID guid;
-	bool inv;
-} values[2] = {
-	{ FUNCT_RUDDER, 3, GUID_RzAxis, false },
-	{ FUNCT_HOVER, 0, GUID_RxAxis, true }
-};
+typedef void (*setOAPIValue)(VESSEL *vessel, float value);
 
 // ==============================================================
 // Helpers for the OAPI
@@ -44,12 +30,30 @@ void setRudder(VESSEL *vessel, float value)
 	switch (attMode)
 	{
 	case RCS_NONE:
+	case RCS_LIN:
 		break;
 	case RCS_ROT:
 		if (newVal < 0)
 			vessel->SetThrusterGroupLevel(THGROUP_ATT_YAWLEFT, newVal * -1);
 		else
 			vessel->SetThrusterGroupLevel(THGROUP_ATT_YAWRIGHT, newVal);
+		break;
+	default:
+		break;
+	}
+}
+
+void setLinHorizon(VESSEL *vessel, float value)
+{
+	double newVal = value * 2.0 - 1.0;
+	vessel->SetControlSurfaceLevel (AIRCTRL_RUDDER, newVal);
+
+	int attMode = vessel->GetAttitudeMode();
+
+	switch (attMode)
+	{
+	case RCS_NONE:
+	case RCS_ROT:
 		break;
 	case RCS_LIN:
 		if (newVal < 0)
@@ -66,6 +70,24 @@ void setHover(VESSEL *vessel, float value)
 {
 	vessel->SetThrusterGroupLevel (THGROUP_HOVER, value);
 }
+
+void setRetro(VESSEL *vessel, float value)
+{
+	vessel->SetThrusterGroupLevel (THGROUP_RETRO, value);
+}
+
+struct Value
+{
+	setOAPIValue funct;
+	int joy;
+	GUID guid;
+	bool inv;
+} values[] = {
+	{ setRudder, 3, GUID_RzAxis, false },
+	{ setLinHorizon, 0, GUID_XAxis, false },
+	{ setHover, 0, GUID_RxAxis, true },
+	{ setRetro, 0, GUID_RyAxis, true }
+};
 
 namespace oapi {
 
@@ -94,6 +116,14 @@ void JoyExt::clbkPreStep (double simt, double simdt, double mjd)
 	UpdateJoystick();
 	VESSEL *vessel = oapiGetFocusInterface();
 
+	// React if we changed from ROT and Rudder was not centered
+	int attMode = vessel->GetAttitudeMode();
+	if (attMode != RCS_ROT)
+	{
+		vessel->SetThrusterGroupLevel(THGROUP_ATT_YAWLEFT, 0);
+		vessel->SetThrusterGroupLevel(THGROUP_ATT_YAWRIGHT, 0);
+	}
+
 	for (int i = 0; i < NELEM(values); ++i)
 	{
 		float val;
@@ -103,17 +133,7 @@ void JoyExt::clbkPreStep (double simt, double simdt, double mjd)
 		if (values[i].inv)
 			val = 1.0f - val;
 
-		switch(values[i].funct)
-		{
-		case FUNCT_RUDDER:
-			setRudder(vessel, val);
-			break;
-		case FUNCT_HOVER:
-			setHover(vessel, val);
-			break;
-		default:
-			break;
-		}
+		values[i].funct(vessel, val);
 	}
 }
 
