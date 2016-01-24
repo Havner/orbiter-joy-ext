@@ -74,6 +74,16 @@ void setRetro(VESSEL *vessel, float value)
 	vessel->SetThrusterGroupLevel (THGROUP_RETRO, value);
 }
 
+void setLeftWheelBrake(VESSEL *vessel, float value)
+{
+	vessel->SetWheelbrakeLevel(value, 1);
+}
+
+void setRightWheelBrake(VESSEL *vessel, float value)
+{
+	vessel->SetWheelbrakeLevel(value, 2);
+}
+
 struct Value
 {
 	setOAPIValue funct;
@@ -81,10 +91,12 @@ struct Value
 	GUID guid;
 	bool inv;
 } values[] = {
-	{ setRudder, 3, GUID_RzAxis, false },
-	{ setLinHorizon, 0, GUID_XAxis, false },
-	{ setHover, 0, GUID_RxAxis, true },
-	{ setRetro, 0, GUID_RyAxis, true }
+	{ setRudder,          3, GUID_RzAxis, false },
+	{ setLinHorizon,      0, GUID_XAxis, false },
+	{ setHover,           0, GUID_RxAxis, true },
+	{ setRetro,           0, GUID_RyAxis, true },
+	{ setLeftWheelBrake,  3, GUID_XAxis, false },
+	{ setRightWheelBrake, 3, GUID_YAxis, false },
 };
 
 namespace oapi {
