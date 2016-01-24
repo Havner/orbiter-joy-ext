@@ -55,7 +55,9 @@ void JoyExt::clbkSimulationStart (RenderMode mode)
 void JoyExt::clbkPreStep (double simt, double simdt, double mjd)
 {
 	UpdateJoystick();
+
 	VESSEL *vessel = oapiGetFocusInterface();
+	resetControls(vessel);
 
 	for (int i = 0; i < NELEM(values); ++i)
 	{
