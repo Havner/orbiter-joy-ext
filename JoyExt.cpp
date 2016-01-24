@@ -12,23 +12,45 @@
 #include "Controls.h"
 #include "Joystick.h"
 
-#define NELEM(X)     (sizeof(X)/sizeof(*(X)))
 
-
-struct Value
+struct Configuration
 {
 	setOAPIValue funct;
 	int joy;
 	GUID guid;
 	bool inv;
-} values[] = {
-	{ setRudder,          3, GUID_RzAxis, false },
-	{ setLinHorizon,      0, GUID_XAxis, false },
-	{ setHover,           0, GUID_RxAxis, true },
-	{ setRetro,           0, GUID_RyAxis, true },
-	{ setLeftWheelBrake,  3, GUID_XAxis, false },
-	{ setRightWheelBrake, 3, GUID_YAxis, false },
 };
+
+// This config can be used with Orbiter's joystick implementation
+// it complements it, pressuming that rudder is on separate device.
+// It adds some custom stuff.
+struct Configuration config1[] = {
+	{ setRudder,          3, GUID_RzAxis, false },
+	{ setLinHorizon,      0, GUID_XAxis,  false },
+	{ setHover,           0, GUID_RxAxis, true  },
+	{ setRetro,           0, GUID_RyAxis, true  },
+	{ setLeftWheelBrake,  3, GUID_XAxis,  false },
+	{ setRightWheelBrake, 3, GUID_YAxis,  false },
+	{ NULL }
+};
+
+// This re-implements everything. Orbiter's joystick implementation
+// is not used here at all, should be disabled.
+struct Configuration config2[] = {
+	{ setElevator,        0, GUID_YAxis,  false },
+	{ setAileron,         0, GUID_XAxis,  false },
+	{ setRudder,          3, GUID_RzAxis, false },
+	{ setThrottle,        0, GUID_ZAxis,  true  },
+	{ setHover,           0, GUID_RzAxis, true  },
+	{ setRetro,           0, GUID_Slider, true  },
+	{ setLeftWheelBrake,  3, GUID_XAxis,  false },
+	{ setRightWheelBrake, 3, GUID_YAxis,  false },
+	{ NULL }
+};
+
+// Currently used configuration
+struct Configuration *config = config2;
+
 
 namespace oapi {
 
@@ -59,16 +81,16 @@ void JoyExt::clbkPreStep (double simt, double simdt, double mjd)
 	VESSEL *vessel = oapiGetFocusInterface();
 	resetControls(vessel);
 
-	for (int i = 0; i < NELEM(values); ++i)
+	for (int i = 0; config[i].funct; ++i)
 	{
 		float val;
-		if (!getValue(values[i].joy, values[i].guid, &val))
+		if (!getValue(config[i].joy, config[i].guid, &val))
 			continue;
 
-		if (values[i].inv)
+		if (config[i].inv)
 			val = 1.0f - val;
 
-		values[i].funct(vessel, val);
+		config[i].funct(vessel, val);
 	}
 }
 
