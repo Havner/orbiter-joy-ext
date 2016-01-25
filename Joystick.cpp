@@ -246,59 +246,59 @@ BOOL CALLBACK EnumObjectsCallback( const DIDEVICEOBJECTINSTANCE* pdidoi, VOID* p
 			return DIENUM_STOP;
 	}
 
-    // Set the UI to reflect what objects the joystick supports
-    if( pdidoi->guidType == GUID_XAxis )
+	// Set the UI to reflect what objects the joystick supports
+	if( pdidoi->guidType == GUID_XAxis )
 	{
 		gJoysticks[*nJoy].bAxes[0] = true;
 		gJoysticks[*nJoy].sName[0] = "X";
 		gJoysticks[*nJoy].gGuid[0] = pdidoi->guidType;
 	}
-    else if( pdidoi->guidType == GUID_YAxis )
+	else if( pdidoi->guidType == GUID_YAxis )
 	{
 		gJoysticks[*nJoy].bAxes[1] = true;
 		gJoysticks[*nJoy].sName[1] = "Y";
 		gJoysticks[*nJoy].gGuid[1] = pdidoi->guidType;
 	}
-    else if( pdidoi->guidType == GUID_ZAxis )
+	else if( pdidoi->guidType == GUID_ZAxis )
 	{
 		gJoysticks[*nJoy].bAxes[2] = true;
 		gJoysticks[*nJoy].sName[2] = "Z";
 		gJoysticks[*nJoy].gGuid[2] = pdidoi->guidType;
 	}
-    else if( pdidoi->guidType == GUID_RxAxis )
+	else if( pdidoi->guidType == GUID_RxAxis )
 	{
 		gJoysticks[*nJoy].bAxes[3] = true;
 		gJoysticks[*nJoy].sName[3] = "Rx";
 		gJoysticks[*nJoy].gGuid[3] = pdidoi->guidType;
 	}
-    else if( pdidoi->guidType == GUID_RyAxis )
+	else if( pdidoi->guidType == GUID_RyAxis )
 	{
 		gJoysticks[*nJoy].bAxes[4] = true;
 		gJoysticks[*nJoy].sName[4] = "Ry";
 		gJoysticks[*nJoy].gGuid[4] = pdidoi->guidType;
 	}
-    else if( pdidoi->guidType == GUID_RzAxis )
+	else if( pdidoi->guidType == GUID_RzAxis )
 	{
 		gJoysticks[*nJoy].bAxes[5] = true;
 		gJoysticks[*nJoy].sName[5] = "Rz";
 		gJoysticks[*nJoy].gGuid[5] = pdidoi->guidType;
 	}
-    else if( pdidoi->guidType == GUID_Slider )
-    {
+	else if( pdidoi->guidType == GUID_Slider )
+	{
 		switch( gJoysticks[*nJoy].nSliders++ )
-        {
-            case 0 :
-				gJoysticks[*nJoy].bAxes[6] = true;
-				gJoysticks[*nJoy].sName[6] = "Slider1";
-				gJoysticks[*nJoy].gGuid[6] = pdidoi->guidType;
-                break;
-            case 1 :
-				gJoysticks[*nJoy].bAxes[7] = true;
-				gJoysticks[*nJoy].sName[7] = "Slider2";
-				gJoysticks[*nJoy].gGuid[7] = pdidoi->guidType;
-                break;
-        }
-    }
+		{
+		case 0 :
+			gJoysticks[*nJoy].bAxes[6] = true;
+			gJoysticks[*nJoy].sName[6] = "Slider1";
+			gJoysticks[*nJoy].gGuid[6] = pdidoi->guidType;
+			break;
+		case 1 :
+			gJoysticks[*nJoy].bAxes[7] = true;
+			gJoysticks[*nJoy].sName[7] = "Slider2";
+			gJoysticks[*nJoy].gGuid[7] = pdidoi->guidType;
+			break;
+		}
+	}
 
 	return DIENUM_CONTINUE;
 }

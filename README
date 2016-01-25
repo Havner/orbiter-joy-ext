@@ -1,0 +1,47 @@
+A simple plugin that adds/extends DirectInput Joystick implementation
+to Orbiter. The main goal was to allow to reconfigure the Joystick
+while keeping the way it behaves in the sim. Meaning that it follows
+the state of the ship's switches: RCS and Aitfoil switch (or similar)
+that decide what and how is enabled. And that one control can steer
+different things depending on those switches.
+
+It was written for my own usage, so it's not exactly plug-n-play. There
+is no graphical configuration or anything. You configure it in the code
+by filling Configuration struct in the JoyExt.cpp.
+
+It can be used as an extension to Orbiter's joystick implementation to
+eg. add a separate device (eg. rudder) while letting the Orbiter to
+handle the primary stick/throttle.
+
+Or it can be used with Orbiter's implementation turned off completely
+and handle everything itself (config2).
+
+The differences between this and Orbiter's implementation:
+
+1. It can be reconfigured obviously and can utilize several physical
+   devices.
+2. Horizontal translational axis is on the stick (left-right) instead of
+   the rudder as is in Orbiter by default. I think this is more logical,
+   although it can be easily changed in the code.
+4. When you switch the RCS or Airfoil switch with a stick/rudder not in
+   the central position Orbiter nullifies the effect the deflection had
+   in the old state and immediately applies the new effect. Here you need
+   to move the control a little for a new state to be applied. This
+   minimizes the chances of unintentional input.
+2. The nosewheel is not always properly controlled with the Rudder.
+   According to Orbiter SDK it should be. It doesn't work on DeltaGlider
+   while works perfectly on DeltaGlider IV. Cause unknown. Bug in Orbiter?
+
+The code itself is very simple and can easily be used to tailor it for
+ones needs. I'm posting this mostly as a resource for developers/power
+users.
+
+
+Free for non commercial use.
+
+The code for DirectInput joystick handling (Joystick.cpp) is taken from
+some MSDN example. It has been improved by me, but the copyright is not
+mine.
+
+
+Lukasz 'Havner' Pawelczyk
