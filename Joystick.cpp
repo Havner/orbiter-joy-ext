@@ -28,14 +28,14 @@ struct Joystick {
 
 bool getValue(int nJoy, GUID Guid, float *fValue)
 {
-	if (nJoy < 0)
+	if (nJoy < 0 || nJoy > JOYSTICKS)
 		return false;
 
 	int n;
 	for (n = 0; n < JOY_AXES; ++n)
 		if (gJoysticks[nJoy].gGuid[n] == Guid)
 			break;
-	if (n >= 8)
+	if (n >= JOY_AXES)
 		return false;
 
 	if (!gJoysticks[nJoy].bChanged[n])
