@@ -1,7 +1,7 @@
 A simple plugin that adds/extends DirectInput Joystick implementation
 to Orbiter. The main goal was to allow to reconfigure the Joystick
 while keeping the way it behaves in the sim. Meaning that it follows
-the state of the ship's switches: RCS and Aitfoil switch (or similar)
+the state of the ship's switches: RCS and Airfoil switch (or similar)
 that decide what and how is enabled. And that one control can steer
 different things depending on those switches.
 
@@ -23,12 +23,14 @@ The differences between this and Orbiter's implementation:
 2. Horizontal translational axis is on the stick (left-right) instead of
    the rudder as is in Orbiter by default. I think this is more logical,
    although it can be easily changed in the code.
-4. When you switch the RCS or Airfoil switch with a stick/rudder not in
-   the central position Orbiter nullifies the effect the deflection had
-   in the old state and immediately applies the new effect. Here you need
-   to move the control a little for a new state to be applied. This
-   minimizes the chances of unintentional input.
-2. The nosewheel is not always properly controlled with the Rudder.
+3. By default in Orbiter when you change the state of the RCS or
+   Airfoil switch with a stick/rudder not in the central position Orbiter
+   nullifies the effect the deflection had in the old state and
+   immediately applies the new effect.
+   Here the old state is nullified as well but you need to move the
+   control a little for a new state to be applied. This minimizes the
+   chances of an unintentional input.
+4. The nosewheel is not always properly controlled with the Rudder.
    According to Orbiter SDK it should be. It doesn't work on DeltaGlider
    while works perfectly on DeltaGlider IV. Cause unknown. Bug in Orbiter?
 
